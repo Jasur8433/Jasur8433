@@ -22,7 +22,7 @@ body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); 
 .card-head { background: linear-gradient(135deg,#3b84ff,#1a56cc); color: #fff; text-align: center; padding: 14px 10px; font-weight: 700; min-height: 72px; display:flex; align-items:center; justify-content:center; }
 .card-body { padding: 14px; }
 .qr-box { background: #fff; border: 1px solid #cad9f1; border-radius: 12px; width: 150px; height: 150px; margin: 4px auto; display:grid; place-items:center; position:relative; text-decoration:none; }
-.qr-pattern { width: 112px; height: 112px; background: repeating-linear-gradient(0deg,#2f6de7 0 6px,#fff 6px 12px), repeating-linear-gradient(90deg,#2f6de7 0 6px,#fff 6px 12px); mix-blend-mode:multiply; }
+.qr-img { width: 112px; height: 112px; object-fit: contain; display: block; }
 .qr-tag { position:absolute; right:-8px; top:-8px; background:#2f6de7; color:#fff; border-radius:999px; font-size:12px; padding:2px 8px; }
 .scan { text-align: center; color: #6e7b91; font-weight: 600; margin: 8px 0 4px; }
 .qr-url { text-align: center; font-size: 12px; color: #4e6892; word-break: break-all; margin-bottom: 10px; }

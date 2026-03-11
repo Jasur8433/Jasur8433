@@ -78,11 +78,12 @@ function renderCards() {
   cardsGrid.innerHTML = departments.map((id) => {
     const s = statsByDept(id);
     const rateLink = `${base}#rate/${id}`;
+    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(rateLink)}`;
     return `<article class="service-card">
       <div class="card-head">${T.dept[id]}</div>
       <div class="card-body">
         <a class="qr-box" href="#rate/${id}" title="${T.scan}">
-          <div class="qr-pattern"></div>
+          <img class="qr-img" src="${qrSrc}" alt="QR ${T.dept[id]}" loading="lazy" />
           <span class="qr-tag">QR</span>
         </a>
         <div class="scan">${T.scan}</div>
