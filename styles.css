@@ -22,7 +22,8 @@ body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); 
 .service-card { background: #f8f9fb; border: 1px solid #d7dfeb; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,.08); }
 .card-head { background: linear-gradient(135deg,#3b84ff,#1a56cc); color: #fff; text-align: center; padding: 11px 10px; font-weight: 700; min-height: 62px; line-height: 1.2; display:flex; align-items:center; justify-content:center; }
 .card-body { padding: 14px; }
-.open-rate-btn { display:block; text-align:center; text-decoration:none; background: linear-gradient(135deg,#3b84ff,#1a56cc); color:#fff; border-radius:10px; font-weight:700; padding:10px 12px; margin: 2px 0 10px; }
+.open-rate-btn { display:block; text-align:center; text-decoration:none; background: linear-gradient(135deg,#12b76a,#0b8f53); color:#fff; border-radius:10px; font-weight:700; padding:10px 12px; margin: 2px 0 10px; box-shadow: 0 4px 10px rgba(11,143,83,.25); }
+.open-rate-btn:hover { background: linear-gradient(135deg,#0fa861,#097f49); }
 .metrics { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
 .metric { border-radius:10px; padding:10px; text-align:center; border:1px solid; }
 .metric.comments { background:#e9f7ef; border-color:#c8ead6; }
