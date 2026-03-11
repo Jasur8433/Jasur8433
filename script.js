@@ -165,6 +165,7 @@ function renderRateView(id) {
   set('rateSubtitle', T.rateHint);
   set('anonNote', T.anonNote);
   set('submitVoteBtn', T.submitVote);
+  set('backToHomeBtn', T.backHome);
   rateResult.textContent = '';
   rateError.textContent = '';
   voteStatusWindow.classList.add('hidden');
