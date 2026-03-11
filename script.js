@@ -15,7 +15,7 @@ const i18n = {
     voteAccepted: 'Ваша оценка принята',
     voteBody: 'Ваша оценка принята анонимно и поможет улучшить качество услуг.',
     voteAlreadyTitle: 'Вы уже голосовали',
-    voteAlreadyBody: 'Повторное голосование с этого устройства недоступно.',
+    voteAlreadyBody: 'Вы уже голосовали за этот факультет с этого устройства.',
     backHome: 'Вернуться на главную',
     adminLoginTitle: 'Вход администратора', lblUser: 'Логин', lblPass: 'Пароль', btnLogin: 'Войти', dashboardTitle: 'Статистика оценок', btnLogout: 'Выйти',
     thDepartment: 'Подразделение', thMood: 'Оценка', thDate: 'Дата', thAction: 'Действие', noData: 'Пока оценок нет', badAuth: 'Неверный логин или пароль',
@@ -36,7 +36,7 @@ const i18n = {
     voteAccepted: 'Siziń bahańız qabıllandı',
     voteBody: 'Bahańız anonim túrde qabıllandı hám xızmet sapasın jaqsılawǵa járdem beredi.',
     voteAlreadyTitle: 'Siz búrın dáwıs berdińiz',
-    voteAlreadyBody: 'Bul qurılmadan qayta dáwıs beriw múmkin emes.',
+    voteAlreadyBody: 'Bu qurilmadan ushbu bo‘lim uchun qayta ovoz berib bo‘lmaydi.',
     backHome: 'Bas betke qaytıw',
     adminLoginTitle: 'Administrator kirishi', lblUser: 'Login', lblPass: 'Parol', btnLogin: 'Kirish', dashboardTitle: 'Baholar statistikasi', btnLogout: 'Chiqish',
     thDepartment: 'Bo‘lim', thMood: 'Baho', thDate: 'Sana', thAction: 'Amal', noData: 'Baholar yo‘q', badAuth: 'Login yoki parol noto‘g‘ri',
@@ -57,7 +57,7 @@ const i18n = {
     voteAccepted: 'Siziń bahańız qabul etildi',
     voteBody: 'Siziń bahańız anonim tárizde qabul etildi hám xızmet sapasın jaqsılawǵa járdem beredi.',
     voteAlreadyTitle: 'Siz búrın dáwıs berdińiz',
-    voteAlreadyBody: 'Bul qurılmadan qayta dáwıs beriw múmkin emes.',
+    voteAlreadyBody: 'Bul qurılmadan usı bólim ushın qayta dáwıs beriw múmkin emes.',
     backHome: 'Bas betke qaytıw',
     adminLoginTitle: 'Administrator kiriwi', lblUser: 'Login', lblPass: 'Parol', btnLogin: 'Kiriw', dashboardTitle: 'Bahalar statistikası', btnLogout: 'Shıǵıw',
     thDepartment: 'Bólim', thMood: 'Baha', thDate: 'Sáne', thAction: 'Ámel', noData: 'Bahalar joq', badAuth: 'Login yamasa parol qáte',
@@ -74,9 +74,20 @@ const votes = JSON.parse(localStorage.getItem('feedback') || '[]');
 const el = (id) => document.getElementById(id);
 const set = (id, txt) => { el(id).textContent = txt; };
 const save = () => localStorage.setItem('feedback', JSON.stringify(votes));
-const VOTE_FLAG_KEY = 'feedback_voted_once';
-const hasVoted = () => localStorage.getItem(VOTE_FLAG_KEY) === '1';
-const markVoted = () => localStorage.setItem(VOTE_FLAG_KEY, '1');
+const VOTE_FLAG_KEY = 'feedback_voted_departments';
+function getVotedDepartments() {
+  return JSON.parse(localStorage.getItem(VOTE_FLAG_KEY) || '[]');
+}
+function hasVoted(departmentId) {
+  return getVotedDepartments().includes(departmentId);
+}
+function markVoted(departmentId) {
+  const current = getVotedDepartments();
+  if (!current.includes(departmentId)) {
+    current.push(departmentId);
+    localStorage.setItem(VOTE_FLAG_KEY, JSON.stringify(current));
+  }
+}
 
 function getDeptFromHash() {
   const hash = location.hash || '#home';
@@ -145,7 +156,7 @@ function renderRateView(id) {
   voteStatusWindow.classList.add('hidden');
   voteStatusWindow.innerHTML = '';
 
-  if (hasVoted()) {
+  if (hasVoted(id)) {
     moodButtons.innerHTML = '';
     showVoteStatusWindow('already');
     return;
@@ -161,13 +172,13 @@ function renderRateView(id) {
 
   moodButtons.querySelectorAll('button').forEach((btn) => {
     btn.addEventListener('click', () => {
-      if (hasVoted()) {
+      if (hasVoted(id)) {
         moodButtons.innerHTML = '';
         showVoteStatusWindow('already');
         return;
       }
       votes.push({ department: id, mood: Number(btn.dataset.mood), date: new Date().toISOString() });
-      markVoted();
+      markVoted(id);
       save();
       moodButtons.innerHTML = '';
       showVoteStatusWindow('ok');
