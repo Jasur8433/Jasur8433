@@ -9,8 +9,6 @@ const i18n = {
     rateTitle: 'Анонимная оценка', rateHint: 'Выберите одну оценку. Данные полностью анонимны.',
     submitVote: 'Отправить голос',
     selectMoodError: 'Сначала выберите оценку.',
-    captchaLabel: 'Я не робот',
-    captchaError: 'Подтвердите reCAPTCHA перед отправкой.',
     moodList: ['Очень хорошо', 'Хорошо', 'Средне', 'Плохо', 'Очень плохо'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Ваша оценка сохраняется анонимно и используется только в общей статистике.',
@@ -34,8 +32,6 @@ const i18n = {
     rateTitle: 'Anonim baholash', rateHint: 'Bitta baho tanlang. Ma’lumotlar to‘liq anonim.',
     submitVote: 'Ovozni yuborish',
     selectMoodError: 'Avval bahoni tanlang.',
-    captchaLabel: 'Men robot emasman',
-    captchaError: 'Yuborishdan oldin reCAPTCHA tasdiqlang.',
     moodList: ['Juda yaxshi', 'Yaxshi', 'O‘rtacha', 'Yomon', 'Juda yomon'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Bahongiz anonim saqlanadi va faqat umumiy statistikada ko‘rinadi.',
@@ -59,8 +55,6 @@ const i18n = {
     rateTitle: 'Anonim bahalaw', rateHint: 'Bir bahanı tańlań. Maǵlıwmat tolıq anonim.',
     submitVote: 'Dáwıstı jiberiw',
     selectMoodError: 'Aldın bahanı tańlań.',
-    captchaLabel: 'Men robot emespen',
-    captchaError: 'Jiberiwden aldın reCAPTCHA tastıyıqlawın ótiń.',
     moodList: ['Óte jaqsı', 'Jaqsı', 'Ortaша', 'Jaman', 'Óte jaman'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Bahasıńız anonim saqlanadı hám tek ulıwma statistikada kórinedi.',
@@ -103,31 +97,6 @@ function markVoted(departmentId) {
 
 let selectedMood = null;
 let currentDepartment = null;
-let recaptchaWidgetId = null;
-
-function ensureRecaptcha() {
-  if (window.grecaptcha && recaptchaWidgetId === null) {
-    recaptchaWidgetId = window.grecaptcha.render('recaptchaBox', { sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' });
-  }
-  const recaptchaAvailable = !!window.grecaptcha;
-  captchaFallbackWrap.classList.toggle('hidden', recaptchaAvailable);
-}
-
-function captchaPassed() {
-  if (window.grecaptcha && recaptchaWidgetId !== null) {
-    return window.grecaptcha.getResponse(recaptchaWidgetId).length > 0;
-  }
-  return !!mockCaptcha.checked;
-}
-
-function resetCaptcha() {
-  if (window.grecaptcha && recaptchaWidgetId !== null) {
-    window.grecaptcha.reset(recaptchaWidgetId);
-  }
-  if (mockCaptcha) {
-    mockCaptcha.checked = false;
-  }
-}
 
 function getDeptFromHash() {
   const hash = location.hash || '#home';
@@ -196,24 +165,19 @@ function renderRateView(id) {
   set('rateSubtitle', T.rateHint);
   set('anonNote', T.anonNote);
   set('submitVoteBtn', T.submitVote);
-  set('captchaFallbackText', T.captchaLabel);
   rateResult.textContent = '';
   rateError.textContent = '';
   voteStatusWindow.classList.add('hidden');
   voteStatusWindow.innerHTML = '';
-  ensureRecaptcha();
-  resetCaptcha();
 
   if (hasVoted(id)) {
     moodButtons.innerHTML = '';
     submitVoteBtn.classList.add('hidden');
-    captchaWrap.classList.add('hidden');
     showVoteStatusWindow('already');
     return;
   }
 
   submitVoteBtn.classList.remove('hidden');
-  captchaWrap.classList.remove('hidden');
 
   moodButtons.innerHTML = T.moodList.map((name, index) => {
     const mood = index + 1;
@@ -236,25 +200,18 @@ function renderRateView(id) {
     if (hasVoted(id)) {
       moodButtons.innerHTML = '';
       submitVoteBtn.classList.add('hidden');
-      captchaWrap.classList.add('hidden');
-      showVoteStatusWindow('already');
+        showVoteStatusWindow('already');
       return;
     }
     if (!selectedMood) {
       rateError.textContent = T.selectMoodError;
       return;
     }
-    if (!captchaPassed()) {
-      rateError.textContent = T.captchaError;
-      return;
-    }
-
     votes.push({ department: id, mood: selectedMood, date: new Date().toISOString() });
     markVoted(id);
     save();
     moodButtons.innerHTML = '';
     submitVoteBtn.classList.add('hidden');
-    captchaWrap.classList.add('hidden');
     showVoteStatusWindow('ok');
     renderCards();
     if (isAdmin) {
