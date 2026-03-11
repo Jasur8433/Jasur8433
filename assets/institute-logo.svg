@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260" role="img" aria-label="Institute logo">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#f6d34a"/>
+      <stop offset="1" stop-color="#d6a80f"/>
+    </linearGradient>
+  </defs>
+  <path d="M20 36h180l-22 34H42z" fill="url(#g)" stroke="#333" stroke-width="3"/>
+  <text x="110" y="60" font-size="18" text-anchor="middle" font-family="Arial" font-weight="700" fill="#10223f">ÓZ MKÓMT</text>
+  <text x="110" y="80" font-size="18" text-anchor="middle" font-family="Arial" font-weight="700" fill="#10223f">NÓKIS FILIALI</text>
+  <path d="M40 110h140l20 96H20z" fill="#fff" stroke="#222" stroke-width="3"/>
+  <circle cx="70" cy="150" r="24" fill="#ffd43b" stroke="#222" stroke-width="3"/>
+  <path d="M58 142c5-8 20-8 24 0M58 158c5 7 20 7 24 0" stroke="#222" stroke-width="3" fill="none"/>
+  <circle cx="62" cy="148" r="2" fill="#222"/><circle cx="80" cy="148" r="2" fill="#222"/>
+  <circle cx="150" cy="156" r="26" fill="#f3c623" stroke="#222" stroke-width="3"/>
+  <text x="150" y="164" font-size="28" text-anchor="middle" font-family="Arial" font-weight="700" fill="#10223f">70</text>
+  <path d="M80 96c0 12-10 20-10 32M140 96c0 12 10 20 10 32" stroke="#c89b09" stroke-width="5" fill="none"/>
+</svg>
