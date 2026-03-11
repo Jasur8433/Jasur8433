@@ -87,7 +87,6 @@ function renderCards() {
           <span class="qr-tag">QR</span>
         </a>
         <div class="scan">${T.scan}</div>
-        <div class="qr-url">${rateLink}</div>
         <div class="metrics">
           <div class="metric comments">💬 ${T.comments}<b>${s.count}</b></div>
           <div class="metric rating">⭐ ${T.rating}<b>${s.avg}</b></div>
