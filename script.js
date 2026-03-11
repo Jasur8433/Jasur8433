@@ -49,7 +49,7 @@ const i18n = {
   },
   kk: {
     brand: 'Xızmetti anonim bahalaw portali', navHome: 'Bas bet', navAdmin: 'Admin panel',
-    heroTitle: 'Ózbekstan mámleketlik kórkem óner hám mádeniyat institutı Nókis filialı',
+    heroTitle: 'Ózbekstan mámleketlik kórkem óner hám mádeniyat institutı<br>Nókis filialı',
     heroSubtitle: 'Túymeni basıp xızmetti anonim bahalań.',
     openRate: 'Bahalawdı ashıw', comments: 'Bahalar', rating: 'Reyting', dist: 'Bólistiriw',
     rateTitle: 'Anonim bahalaw', rateHint: 'Bahanı tańlań hám dáwıstı jiberiń.',
@@ -259,7 +259,8 @@ window.removeRow = (i) => {
 function applyTexts() {
   const T = i18n[lang];
   set('brand', T.brand);
-  set('heroTitle', T.heroTitle); set('heroSubtitle', T.heroSubtitle);
+  heroTitle.innerHTML = T.heroTitle;
+  set('heroSubtitle', T.heroSubtitle);
   set('adminLoginTitle', T.adminLoginTitle); set('lblUser', T.lblUser); set('lblPass', T.lblPass);
   set('btnLogin', T.btnLogin); set('dashboardTitle', T.dashboardTitle); set('btnLogout', T.btnLogout);
   set('thDepartment', T.thDepartment); set('thMood', T.thMood); set('thDate', T.thDate); set('thAction', T.thAction);
