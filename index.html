@@ -31,6 +31,15 @@
         <h2 id="rateDeptTitle"></h2>
         <p id="rateSubtitle"></p>
         <div id="moodButtons" class="mood-buttons"></div>
+        <div id="captchaWrap" class="captcha-wrap">
+          <div id="recaptchaBox"></div>
+          <label id="captchaFallbackWrap" class="captcha-fallback hidden">
+            <input type="checkbox" id="mockCaptcha" />
+            <span id="captchaFallbackText"></span>
+          </label>
+        </div>
+        <button id="submitVoteBtn" class="btn"></button>
+        <p id="rateError" class="rate-error"></p>
         <p class="anon-note" id="anonNote"></p>
         <p id="rateResult"></p>
         <div id="voteStatusWindow" class="vote-status-window hidden"></div>
@@ -75,6 +84,7 @@
     <div class="container" id="footerText"></div>
   </footer>
 
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script src="script.js"></script>
 </body>
 </html>

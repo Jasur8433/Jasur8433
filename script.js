@@ -7,6 +7,10 @@ const i18n = {
     heroSubtitle: 'Нажмите кнопку и поставьте анонимную оценку — без ФИО, телефона и комментариев.',
     openRate: 'Открыть оценку', comments: 'Оценок', rating: 'Рейтинг', dist: 'Распределение',
     rateTitle: 'Анонимная оценка', rateHint: 'Выберите одну оценку. Данные полностью анонимны.',
+    submitVote: 'Отправить голос',
+    selectMoodError: 'Сначала выберите оценку.',
+    captchaLabel: 'Я не робот',
+    captchaError: 'Подтвердите reCAPTCHA перед отправкой.',
     moodList: ['Очень хорошо', 'Хорошо', 'Средне', 'Плохо', 'Очень плохо'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Ваша оценка сохраняется анонимно и используется только в общей статистике.',
@@ -28,6 +32,10 @@ const i18n = {
     heroSubtitle: 'Tugmani bosib anonim baho bering — F.I.SH., telefon va izoh talab qilinmaydi.',
     openRate: 'Baholashni ochish', comments: 'Baholar', rating: 'Reyting', dist: 'Taqsimot',
     rateTitle: 'Anonim baholash', rateHint: 'Bitta baho tanlang. Ma’lumotlar to‘liq anonim.',
+    submitVote: 'Ovozni yuborish',
+    selectMoodError: 'Avval bahoni tanlang.',
+    captchaLabel: 'Men robot emasman',
+    captchaError: 'Yuborishdan oldin reCAPTCHA tasdiqlang.',
     moodList: ['Juda yaxshi', 'Yaxshi', 'O‘rtacha', 'Yomon', 'Juda yomon'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Bahongiz anonim saqlanadi va faqat umumiy statistikada ko‘rinadi.',
@@ -49,6 +57,10 @@ const i18n = {
     heroSubtitle: 'Túymeni basıp anonim baha beriń — atı-jóni, telefon hám pikir talap etilmeydi.',
     openRate: 'Bahalawdı ashıw', comments: 'Bahalar', rating: 'Reyting', dist: 'Bólistiriw',
     rateTitle: 'Anonim bahalaw', rateHint: 'Bir bahanı tańlań. Maǵlıwmat tolıq anonim.',
+    submitVote: 'Dáwıstı jiberiw',
+    selectMoodError: 'Aldın bahanı tańlań.',
+    captchaLabel: 'Men robot emespen',
+    captchaError: 'Jiberiwden aldın reCAPTCHA tastıyıqlawın ótiń.',
     moodList: ['Óte jaqsı', 'Jaqsı', 'Ortaша', 'Jaman', 'Óte jaman'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Bahasıńız anonim saqlanadı hám tek ulıwma statistikada kórinedi.',
@@ -86,6 +98,34 @@ function markVoted(departmentId) {
   if (!current.includes(departmentId)) {
     current.push(departmentId);
     localStorage.setItem(VOTE_FLAG_KEY, JSON.stringify(current));
+  }
+}
+
+let selectedMood = null;
+let currentDepartment = null;
+let recaptchaWidgetId = null;
+
+function ensureRecaptcha() {
+  if (window.grecaptcha && recaptchaWidgetId === null) {
+    recaptchaWidgetId = window.grecaptcha.render('recaptchaBox', { sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' });
+  }
+  const recaptchaAvailable = !!window.grecaptcha;
+  captchaFallbackWrap.classList.toggle('hidden', recaptchaAvailable);
+}
+
+function captchaPassed() {
+  if (window.grecaptcha && recaptchaWidgetId !== null) {
+    return window.grecaptcha.getResponse(recaptchaWidgetId).length > 0;
+  }
+  return !!mockCaptcha.checked;
+}
+
+function resetCaptcha() {
+  if (window.grecaptcha && recaptchaWidgetId !== null) {
+    window.grecaptcha.reset(recaptchaWidgetId);
+  }
+  if (mockCaptcha) {
+    mockCaptcha.checked = false;
   }
 }
 
@@ -149,18 +189,31 @@ function showVoteStatusWindow(type) {
 
 function renderRateView(id) {
   const T = i18n[lang];
+  currentDepartment = id;
+  selectedMood = null;
+
   set('rateDeptTitle', `${T.rateTitle}: ${T.dept[id]}`);
   set('rateSubtitle', T.rateHint);
   set('anonNote', T.anonNote);
+  set('submitVoteBtn', T.submitVote);
+  set('captchaFallbackText', T.captchaLabel);
   rateResult.textContent = '';
+  rateError.textContent = '';
   voteStatusWindow.classList.add('hidden');
   voteStatusWindow.innerHTML = '';
+  ensureRecaptcha();
+  resetCaptcha();
 
   if (hasVoted(id)) {
     moodButtons.innerHTML = '';
+    submitVoteBtn.classList.add('hidden');
+    captchaWrap.classList.add('hidden');
     showVoteStatusWindow('already');
     return;
   }
+
+  submitVoteBtn.classList.remove('hidden');
+  captchaWrap.classList.remove('hidden');
 
   moodButtons.innerHTML = T.moodList.map((name, index) => {
     const mood = index + 1;
@@ -172,23 +225,43 @@ function renderRateView(id) {
 
   moodButtons.querySelectorAll('button').forEach((btn) => {
     btn.addEventListener('click', () => {
-      if (hasVoted(id)) {
-        moodButtons.innerHTML = '';
-        showVoteStatusWindow('already');
-        return;
-      }
-      votes.push({ department: id, mood: Number(btn.dataset.mood), date: new Date().toISOString() });
-      markVoted(id);
-      save();
-      moodButtons.innerHTML = '';
-      showVoteStatusWindow('ok');
-      renderCards();
-      if (isAdmin) {
-        renderAdminStats();
-        renderAdminTable();
-      }
+      selectedMood = Number(btn.dataset.mood);
+      rateError.textContent = '';
+      moodButtons.querySelectorAll('button').forEach((b) => b.classList.remove('selected'));
+      btn.classList.add('selected');
     });
   });
+
+  submitVoteBtn.onclick = () => {
+    if (hasVoted(id)) {
+      moodButtons.innerHTML = '';
+      submitVoteBtn.classList.add('hidden');
+      captchaWrap.classList.add('hidden');
+      showVoteStatusWindow('already');
+      return;
+    }
+    if (!selectedMood) {
+      rateError.textContent = T.selectMoodError;
+      return;
+    }
+    if (!captchaPassed()) {
+      rateError.textContent = T.captchaError;
+      return;
+    }
+
+    votes.push({ department: id, mood: selectedMood, date: new Date().toISOString() });
+    markVoted(id);
+    save();
+    moodButtons.innerHTML = '';
+    submitVoteBtn.classList.add('hidden');
+    captchaWrap.classList.add('hidden');
+    showVoteStatusWindow('ok');
+    renderCards();
+    if (isAdmin) {
+      renderAdminStats();
+      renderAdminTable();
+    }
+  };
 }
 
 function renderAdminStats() {

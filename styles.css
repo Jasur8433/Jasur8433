@@ -84,3 +84,9 @@ th,td { border-bottom:1px solid var(--line); padding:9px; text-align:left; verti
 .vote-status-body .check { width: 90px; height: 90px; margin: 0 auto 10px; border: 8px solid #10bf56; color: #10bf56; border-radius: 999px; display:flex; align-items:center; justify-content:center; font-size: 44px; font-weight: 800; }
 .vote-status-body p { margin: 8px auto 12px; max-width: 360px; color: #4b5c76; }
 .vote-status-body .btn { max-width: 230px; margin: 0 auto; }
+
+.mood-item.selected { outline: 3px solid #1f5fd0; transform: translateY(-1px); }
+.captcha-wrap { border:1px solid #d8e1f2; border-radius: 12px; padding: 10px; background:#f7faff; margin-bottom: 10px; }
+.captcha-fallback { display:flex; align-items:center; gap:8px; color:#2b3d5d; font-weight:600; }
+.captcha-fallback input { width:18px; height:18px; }
+.rate-error { color:#d12a2a !important; font-weight:700; min-height: 20px; }
