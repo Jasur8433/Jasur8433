@@ -11,6 +11,12 @@ const i18n = {
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Ваша оценка сохраняется анонимно и используется только в общей статистике.',
     voteOk: 'Спасибо! Ваша анонимная оценка принята.',
+    voteTitle: 'Спасибо!',
+    voteAccepted: 'Ваша оценка принята',
+    voteBody: 'Ваша оценка принята анонимно и поможет улучшить качество услуг.',
+    voteAlreadyTitle: 'Вы уже голосовали',
+    voteAlreadyBody: 'Повторное голосование с этого устройства недоступно.',
+    backHome: 'Вернуться на главную',
     adminLoginTitle: 'Вход администратора', lblUser: 'Логин', lblPass: 'Пароль', btnLogin: 'Войти', dashboardTitle: 'Статистика оценок', btnLogout: 'Выйти',
     thDepartment: 'Подразделение', thMood: 'Оценка', thDate: 'Дата', thAction: 'Действие', noData: 'Пока оценок нет', badAuth: 'Неверный логин или пароль',
     footer: '© 2026 Анонимная система оценки качества услуг',
@@ -26,6 +32,12 @@ const i18n = {
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Bahongiz anonim saqlanadi va faqat umumiy statistikada ko‘rinadi.',
     voteOk: 'Rahmat! Anonim baho qabul qilindi.',
+    voteTitle: 'Raxmet!',
+    voteAccepted: 'Siziń bahańız qabıllandı',
+    voteBody: 'Bahańız anonim túrde qabıllandı hám xızmet sapasın jaqsılawǵa járdem beredi.',
+    voteAlreadyTitle: 'Siz búrın dáwıs berdińiz',
+    voteAlreadyBody: 'Bul qurılmadan qayta dáwıs beriw múmkin emes.',
+    backHome: 'Bas betke qaytıw',
     adminLoginTitle: 'Administrator kirishi', lblUser: 'Login', lblPass: 'Parol', btnLogin: 'Kirish', dashboardTitle: 'Baholar statistikasi', btnLogout: 'Chiqish',
     thDepartment: 'Bo‘lim', thMood: 'Baho', thDate: 'Sana', thAction: 'Amal', noData: 'Baholar yo‘q', badAuth: 'Login yoki parol noto‘g‘ri',
     footer: '© 2026 Xizmat sifatini anonim baholash tizimi',
@@ -41,6 +53,12 @@ const i18n = {
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
     anonNote: 'Bahasıńız anonim saqlanadı hám tek ulıwma statistikada kórinedi.',
     voteOk: 'Raxmet! Anonim baha qabul etildi.',
+    voteTitle: 'Raxmet!',
+    voteAccepted: 'Siziń bahańız qabul etildi',
+    voteBody: 'Siziń bahańız anonim tárizde qabul etildi hám xızmet sapasın jaqsılawǵa járdem beredi.',
+    voteAlreadyTitle: 'Siz búrın dáwıs berdińiz',
+    voteAlreadyBody: 'Bul qurılmadan qayta dáwıs beriw múmkin emes.',
+    backHome: 'Bas betke qaytıw',
     adminLoginTitle: 'Administrator kiriwi', lblUser: 'Login', lblPass: 'Parol', btnLogin: 'Kiriw', dashboardTitle: 'Bahalar statistikası', btnLogout: 'Shıǵıw',
     thDepartment: 'Bólim', thMood: 'Baha', thDate: 'Sáne', thAction: 'Ámel', noData: 'Bahalar joq', badAuth: 'Login yamasa parol qáte',
     footer: '© 2026 Xızmet sapasın anonim bahalaw sisteması',
@@ -56,6 +74,9 @@ const votes = JSON.parse(localStorage.getItem('feedback') || '[]');
 const el = (id) => document.getElementById(id);
 const set = (id, txt) => { el(id).textContent = txt; };
 const save = () => localStorage.setItem('feedback', JSON.stringify(votes));
+const VOTE_FLAG_KEY = 'feedback_voted_once';
+const hasVoted = () => localStorage.getItem(VOTE_FLAG_KEY) === '1';
+const markVoted = () => localStorage.setItem(VOTE_FLAG_KEY, '1');
 
 function getDeptFromHash() {
   const hash = location.hash || '#home';
@@ -98,11 +119,38 @@ function renderCards() {
   }).join('');
 }
 
+function showVoteStatusWindow(type) {
+  const T = i18n[lang];
+  const isAlready = type === 'already';
+  voteStatusWindow.classList.remove('hidden');
+  voteStatusWindow.innerHTML = `
+    <div class="vote-status-head">
+      <h3>${isAlready ? T.voteAlreadyTitle : T.voteTitle}</h3>
+      <p>${isAlready ? T.voteAlreadyBody : T.voteAccepted}</p>
+    </div>
+    <div class="vote-status-body">
+      <div class="check">✓</div>
+      <p>${T.voteBody}</p>
+      <a href="#home" class="btn">${T.backHome}</a>
+    </div>
+  `;
+}
+
 function renderRateView(id) {
   const T = i18n[lang];
   set('rateDeptTitle', `${T.rateTitle}: ${T.dept[id]}`);
   set('rateSubtitle', T.rateHint);
   set('anonNote', T.anonNote);
+  rateResult.textContent = '';
+  voteStatusWindow.classList.add('hidden');
+  voteStatusWindow.innerHTML = '';
+
+  if (hasVoted()) {
+    moodButtons.innerHTML = '';
+    showVoteStatusWindow('already');
+    return;
+  }
+
   moodButtons.innerHTML = T.moodList.map((name, index) => {
     const mood = index + 1;
     return `<button class="mood-item m${mood}" data-mood="${mood}" type="button">
@@ -113,9 +161,16 @@ function renderRateView(id) {
 
   moodButtons.querySelectorAll('button').forEach((btn) => {
     btn.addEventListener('click', () => {
+      if (hasVoted()) {
+        moodButtons.innerHTML = '';
+        showVoteStatusWindow('already');
+        return;
+      }
       votes.push({ department: id, mood: Number(btn.dataset.mood), date: new Date().toISOString() });
+      markVoted();
       save();
-      rateResult.textContent = T.voteOk;
+      moodButtons.innerHTML = '';
+      showVoteStatusWindow('ok');
       renderCards();
       if (isAdmin) {
         renderAdminStats();

@@ -75,3 +75,12 @@ th,td { border-bottom:1px solid var(--line); padding:9px; text-align:left; verti
   .hero-sub { font-size: 16px; }
   .admin-stats { grid-template-columns: 1fr; }
 }
+
+.vote-status-window { border: 1px solid #d8e1f2; border-radius: 18px; overflow: hidden; margin-top: 10px; background: #fff; }
+.vote-status-head { background: linear-gradient(135deg,#2f74e7,#1f5fd0); color: #fff; text-align: center; padding: 18px 14px; }
+.vote-status-head h3 { margin: 0 0 6px; font-size: 38px; line-height: 1; }
+.vote-status-head p { margin: 0; color: #d9e7ff; }
+.vote-status-body { text-align: center; padding: 20px 16px 18px; }
+.vote-status-body .check { width: 90px; height: 90px; margin: 0 auto 10px; border: 8px solid #10bf56; color: #10bf56; border-radius: 999px; display:flex; align-items:center; justify-content:center; font-size: 44px; font-weight: 800; }
+.vote-status-body p { margin: 8px auto 12px; max-width: 360px; color: #4b5c76; }
+.vote-status-body .btn { max-width: 230px; margin: 0 auto; }
