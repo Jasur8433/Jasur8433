@@ -21,10 +21,7 @@ body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); 
 .service-card { background: #f8f9fb; border: 1px solid #d7dfeb; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,.08); }
 .card-head { background: linear-gradient(135deg,#3b84ff,#1a56cc); color: #fff; text-align: center; padding: 14px 10px; font-weight: 700; min-height: 72px; display:flex; align-items:center; justify-content:center; }
 .card-body { padding: 14px; }
-.qr-box { background: #fff; border: 1px solid #cad9f1; border-radius: 12px; width: 150px; height: 150px; margin: 4px auto; display:grid; place-items:center; position:relative; text-decoration:none; }
-.qr-img { width: 112px; height: 112px; object-fit: contain; display: block; }
-.qr-tag { position:absolute; right:-8px; top:-8px; background:#2f6de7; color:#fff; border-radius:999px; font-size:12px; padding:2px 8px; }
-.scan { text-align: center; color: #6e7b91; font-weight: 600; margin: 8px 0 10px; }
+.open-rate-btn { display:block; text-align:center; text-decoration:none; background: linear-gradient(135deg,#3b84ff,#1a56cc); color:#fff; border-radius:10px; font-weight:700; padding:11px 12px; margin: 2px 0 12px; }
 .metrics { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
 .metric { border-radius:10px; padding:10px; text-align:center; border:1px solid; }
 .metric.comments { background:#e9f7ef; border-color:#c8ead6; }

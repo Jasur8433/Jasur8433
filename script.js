@@ -4,8 +4,8 @@ const i18n = {
   ru: {
     brand: 'Портал анонимной оценки услуг', navHome: 'Главная', navAdmin: 'Админ панель',
     heroTitle: 'Нукусский филиал Государственного института искусств и культуры Узбекистана',
-    heroSubtitle: 'Сканируйте QR и ставьте анонимную оценку — без ФИО, телефона и комментариев.',
-    scan: 'Сканируйте QR-код', comments: 'Оценок', rating: 'Рейтинг', dist: 'Распределение',
+    heroSubtitle: 'Нажмите кнопку и поставьте анонимную оценку — без ФИО, телефона и комментариев.',
+    openRate: 'Открыть оценку', comments: 'Оценок', rating: 'Рейтинг', dist: 'Распределение',
     rateTitle: 'Анонимная оценка', rateHint: 'Выберите одну оценку. Данные полностью анонимны.',
     moodList: ['Очень хорошо', 'Хорошо', 'Средне', 'Плохо', 'Очень плохо'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
@@ -19,8 +19,8 @@ const i18n = {
   uz: {
     brand: 'Xizmatni anonim baholash portali', navHome: 'Bosh sahifa', navAdmin: 'Admin panel',
     heroTitle: 'O‘zbekiston davlat san’at va madaniyat instituti Nukus filiali',
-    heroSubtitle: 'QR ni skanerlab anonim baho bering — F.I.SH., telefon va izoh talab qilinmaydi.',
-    scan: 'QR-kodni skanerlang', comments: 'Baholar', rating: 'Reyting', dist: 'Taqsimot',
+    heroSubtitle: 'Tugmani bosib anonim baho bering — F.I.SH., telefon va izoh talab qilinmaydi.',
+    openRate: 'Baholashni ochish', comments: 'Baholar', rating: 'Reyting', dist: 'Taqsimot',
     rateTitle: 'Anonim baholash', rateHint: 'Bitta baho tanlang. Ma’lumotlar to‘liq anonim.',
     moodList: ['Juda yaxshi', 'Yaxshi', 'O‘rtacha', 'Yomon', 'Juda yomon'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
@@ -34,8 +34,8 @@ const i18n = {
   kk: {
     brand: 'Xızmetti anonim bahalaw portali', navHome: 'Bas bet', navAdmin: 'Admin panel',
     heroTitle: 'Ózbekstan mámleketlik kórkem óner hám mádeniyat institutı Nókis filialı',
-    heroSubtitle: 'QR arqalı anonim baha beriń — atı-jóni, telefon hám pikir talap etilmeydi.',
-    scan: 'QR-kodtı skanerleń', comments: 'Bahalar', rating: 'Reyting', dist: 'Bólistiriw',
+    heroSubtitle: 'Túymeni basıp anonim baha beriń — atı-jóni, telefon hám pikir talap etilmeydi.',
+    openRate: 'Bahalawdı ashıw', comments: 'Bahalar', rating: 'Reyting', dist: 'Bólistiriw',
     rateTitle: 'Anonim bahalaw', rateHint: 'Bir bahanı tańlań. Maǵlıwmat tolıq anonim.',
     moodList: ['Óte jaqsı', 'Jaqsı', 'Ortaша', 'Jaman', 'Óte jaman'],
     moodIcons: ['😀', '🙂', '😐', '🙁', '😡'],
@@ -74,19 +74,12 @@ function statsByDept(id) {
 
 function renderCards() {
   const T = i18n[lang];
-  const base = `${location.origin}${location.pathname}`;
   cardsGrid.innerHTML = departments.map((id) => {
     const s = statsByDept(id);
-    const rateLink = `${base}#rate/${id}`;
-    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(rateLink)}`;
     return `<article class="service-card">
       <div class="card-head">${T.dept[id]}</div>
       <div class="card-body">
-        <a class="qr-box" href="#rate/${id}" title="${T.scan}">
-          <img class="qr-img" src="${qrSrc}" alt="QR ${T.dept[id]}" loading="lazy" />
-          <span class="qr-tag">QR</span>
-        </a>
-        <div class="scan">${T.scan}</div>
+        <a class="open-rate-btn" href="#rate/${id}">${T.openRate}</a>
         <div class="metrics">
           <div class="metric comments">💬 ${T.comments}<b>${s.count}</b></div>
           <div class="metric rating">⭐ ${T.rating}<b>${s.avg}</b></div>
