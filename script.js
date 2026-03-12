@@ -76,11 +76,13 @@ const langs = [{ code: 'ru', label: 'RU' }, { code: 'uz', label: 'UZ' }, { code:
 let lang = localStorage.getItem('lang') || 'ru';
 let isAdmin = sessionStorage.getItem('admin') === '1';
 let votes = [];
+let fileHandle = null;
 
 const el = (id) => document.getElementById(id);
 const set = (id, txt) => { el(id).textContent = txt; };
 const rateActions = el('rateActions');
 const VOTE_FLAG_KEY = 'feedback_voted_departments';
+const VOTES_BACKUP_KEY = 'feedback_votes_backup';
 
 function getVotedDepartments() {
   return JSON.parse(localStorage.getItem(VOTE_FLAG_KEY) || '[]');
@@ -96,22 +98,77 @@ function markVoted(departmentId) {
   }
 }
 
-async function api(path, options = {}) {
-  const res = await fetch(path, {
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options,
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || `HTTP ${res.status}`);
-  }
-  if (res.status === 204) return null;
-  return res.json();
+function generateVoteId() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-async function loadVotes() {
-  const data = await api('/api/votes');
-  votes = data.votes || [];
+function normalizeVotes(rows) {
+  return (rows || []).map((v) => ({
+    id: v.id || generateVoteId(),
+    department: v.department,
+    mood: Number(v.mood),
+    date: v.date || new Date().toISOString(),
+  }));
+}
+
+async function writeVotesToFile() {
+  if (!fileHandle) return;
+  const writable = await fileHandle.createWritable();
+  await writable.write(JSON.stringify({ votes }, null, 2));
+  await writable.close();
+}
+
+async function persistVotes() {
+  localStorage.setItem(VOTES_BACKUP_KEY, JSON.stringify(votes));
+  try {
+    await writeVotesToFile();
+  } catch (_) {
+    set('storageStatus', 'Ошибка записи в файл, сохранено во временном хранилище браузера');
+  }
+}
+
+async function loadVotesFromCurrentSource() {
+  const backup = JSON.parse(localStorage.getItem(VOTES_BACKUP_KEY) || '[]');
+  votes = normalizeVotes(backup);
+
+  if (!fileHandle) return;
+  try {
+    const file = await fileHandle.getFile();
+    const text = await file.text();
+    if (!text.trim()) {
+      await writeVotesToFile();
+      return;
+    }
+    const parsed = JSON.parse(text);
+    votes = normalizeVotes(parsed.votes || []);
+    localStorage.setItem(VOTES_BACKUP_KEY, JSON.stringify(votes));
+  } catch (_) {
+    set('storageStatus', 'Не удалось прочитать файл, используется временное хранилище браузера');
+  }
+}
+
+async function connectStorageFile() {
+  if (!window.showSaveFilePicker) {
+    set('storageStatus', 'Браузер не поддерживает выбор локального файла (используется временное хранилище)');
+    return;
+  }
+  try {
+    fileHandle = await window.showSaveFilePicker({
+      suggestedName: 'feedback-votes.json',
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+    });
+    await loadVotesFromCurrentSource();
+    await persistVotes();
+    set('storageStatus', 'Файл подключён: feedback-votes.json');
+    renderCards();
+    if (isAdmin) {
+      renderAdminStats();
+      renderAdminTable();
+    }
+  } catch (_) {
+    // user cancelled dialog
+  }
 }
 
 let selectedMood = null;
@@ -233,23 +290,16 @@ function renderRateView(id) {
       return;
     }
 
-    try {
-      await api('/api/votes', {
-        method: 'POST',
-        body: JSON.stringify({ department: id, mood: selectedMood }),
-      });
-      markVoted(id);
-      await loadVotes();
-      moodButtons.innerHTML = '';
-      rateActions.classList.add('hidden');
-      showVoteStatusWindow('ok');
-      renderCards();
-      if (isAdmin) {
-        renderAdminStats();
-        renderAdminTable();
-      }
-    } catch (e) {
-      rateError.textContent = 'Ошибка сохранения. Повторите попытку.';
+    votes.unshift({ id: generateVoteId(), department: id, mood: selectedMood, date: new Date().toISOString() });
+    markVoted(id);
+    await persistVotes();
+    moodButtons.innerHTML = '';
+    rateActions.classList.add('hidden');
+    showVoteStatusWindow('ok');
+    renderCards();
+    if (isAdmin) {
+      renderAdminStats();
+      renderAdminTable();
     }
   };
 }
@@ -277,20 +327,16 @@ function renderAdminTable() {
     <td>${T.dept[v.department]}</td>
     <td>${T.moodList[Number(v.mood) - 1]}</td>
     <td>${new Date(v.date).toLocaleString()}</td>
-    <td><button class="btn ghost" onclick="removeRow(${v.id})">×</button></td>
+    <td><button class="btn ghost" onclick="removeRow('${v.id}')">×</button></td>
   </tr>`).join('');
 }
 
 window.removeRow = async (id) => {
-  try {
-    await api(`/api/votes/${id}`, { method: 'DELETE' });
-    await loadVotes();
-    renderCards();
-    renderAdminStats();
-    renderAdminTable();
-  } catch (e) {
-    alert('Не удалось удалить голос');
-  }
+  votes = votes.filter((v) => String(v.id) !== String(id));
+  await persistVotes();
+  renderCards();
+  renderAdminStats();
+  renderAdminTable();
 };
 
 function applyTexts() {
@@ -351,15 +397,12 @@ loginForm.onsubmit = (e) => {
 };
 
 btnLogout.onclick = () => { isAdmin = false; sessionStorage.removeItem('admin'); route(); };
+btnConnectFile.onclick = connectStorageFile;
 window.addEventListener('hashchange', route);
 
 (async function init() {
   renderLangButtons();
-  try {
-    await loadVotes();
-  } catch (e) {
-    alert('База данных недоступна. Запустите server.py');
-  }
+  await loadVotesFromCurrentSource();
   applyTexts();
   route();
 })();

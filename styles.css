@@ -70,6 +70,8 @@ input { font: inherit; border:1px solid #c7d5ea; border-radius:10px; padding:10p
 .submit-vote-btn { order: 2; }
 .hidden { display:none; }
 .admin-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.storage-tools { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:10px; }
+.storage-tools small { color:#5b6f8f; }
 .admin-stats { display:grid; grid-template-columns: repeat(4,1fr); gap:10px; margin-bottom:12px; }
 .a-stat { background:#f4f7fc; border:1px solid #d8e1ee; border-radius:10px; padding:10px; }
 .a-stat b { display:block; font-size:20px; }
