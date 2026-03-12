@@ -2,7 +2,7 @@ const departments = ['agro', 'zoo', 'reg', 'edu', 'control', 'orders', 'hr', 'di
 
 const i18n = {
   ru: {
-    brand: 'Портал анонимной оценки услуг', navHome: 'Главная', navAdmin: 'Админ панель',
+    brand: 'Портал анонимной оценки услуг',
     heroTitle: 'Нукусский филиал Государственного института искусств и культуры Узбекистана',
     heroSubtitle: 'Нажмите кнопку и оцените сервис анонимно.',
     openRate: 'Открыть оценку', comments: 'Оценок', rating: 'Рейтинг', dist: 'Распределение',
@@ -25,7 +25,7 @@ const i18n = {
     dept: { agro:'Факультет агротехнологий', zoo:'Факультет зооинженерии', reg:'Офис регистратора', edu:'Учебно-методический отдел', control:'Отдел внутреннего контроля', orders:'Отдел мониторинга поручений', hr:'Отдел кадров', distance:'Дистанционное обучение' }
   },
   uz: {
-    brand: 'Xizmatni anonim baholash portali', navHome: 'Bosh sahifa', navAdmin: 'Admin panel',
+    brand: 'Xizmatni anonim baholash portali',
     heroTitle: 'O‘zbekiston davlat san’at va madaniyat instituti Nukus filiali',
     heroSubtitle: 'Tugmani bosib xizmatni anonim baholang.',
     openRate: 'Baholashni ochish', comments: 'Baholar', rating: 'Reyting', dist: 'Taqsimot',
@@ -48,7 +48,7 @@ const i18n = {
     dept: { agro:'Agrotexnologiya fakulteti', zoo:'Zooinjeneriya fakulteti', reg:'Registrator ofisi', edu:'O‘quv-uslubiy bo‘lim', control:'Ichki nazorat bo‘limi', orders:'Topshiriqlar monitoring bo‘limi', hr:'Kadrlar bo‘limi', distance:'Masofaviy ta’lim' }
   },
   kk: {
-    brand: 'Xızmetti anonim bahalaw portali', navHome: 'Bas bet', navAdmin: 'Admin panel',
+    brand: 'Xızmetti anonim bahalaw portali',
     heroTitle: 'Ózbekstan mámleketlik kórkem óner hám mádeniyat institutı<br>Nókis filialı',
     heroSubtitle: 'Túymeni basıp xızmetti anonim bahalań.',
     openRate: 'Bahalawdı ashıw', comments: 'Bahalar', rating: 'Reyting', dist: 'Bólistiriw',
@@ -172,7 +172,6 @@ async function connectStorageFile() {
 }
 
 let selectedMood = null;
-let currentDepartment = null;
 
 function getDeptFromHash() {
   const hash = location.hash || '#home';
@@ -233,13 +232,13 @@ function showVoteStatusWindow(type) {
     <div class="vote-status-body">
       <div class="check">✓</div>
       <p>${T.voteBody}</p>
+      ${isAlready ? '' : `<a href="#home" class="btn">${T.backHome}</a>`}
     </div>
   `;
 }
 
 function renderRateView(id) {
   const T = i18n[lang];
-  currentDepartment = id;
   selectedMood = null;
 
   set('rateDeptTitle', `${T.rateTitle}: ${T.dept[id]}`);
@@ -247,7 +246,6 @@ function renderRateView(id) {
   set('anonNote', T.anonNote);
   set('submitVoteBtn', T.submitVote);
   set('backToHomeBtn', T.backHome);
-  rateResult.textContent = '';
   rateError.textContent = '';
   voteStatusWindow.classList.add('hidden');
   voteStatusWindow.innerHTML = '';
@@ -359,7 +357,6 @@ function route() {
   adminView.classList.toggle('hidden', hash !== '#admin');
 
   if (deptId) {
-    rateResult.textContent = '';
     renderRateView(deptId);
   }
 

@@ -59,7 +59,6 @@ main.container { flex: 1 0 auto; width: min(1450px, 96%); }
 .m4 { background:#fdeedb; border-color:#f3c88b; color:#d55f00; }
 .m5 { background:#fbe5e5; border-color:#f4b1b1; color:#d81616; }
 .anon-note { background: #eaf2ff; border-radius: 10px; padding: 7px 9px; color: #2a4a80 !important; line-height: 1.2; font-size: 14px; }
-#rateResult { color: #188748; font-weight: 700; }
 
 label { display:flex; flex-direction:column; gap:6px; font-weight:600; margin-bottom:10px; }
 input { font: inherit; border:1px solid #c7d5ea; border-radius:10px; padding:10px; }
@@ -109,6 +108,7 @@ th,td { border-bottom:1px solid var(--line); padding:9px; text-align:left; verti
 .vote-status-body { text-align: center; padding: 14px 12px 12px; }
 .vote-status-body .check { width: 74px; height: 74px; margin: 0 auto 8px; border: 6px solid #10bf56; color: #10bf56; border-radius: 999px; display:flex; align-items:center; justify-content:center; font-size: 36px; font-weight: 800; }
 .vote-status-body p { margin: 5px auto 8px; max-width: 330px; color: #4b5c76; line-height: 1.22; }
+.vote-status-body .btn { max-width: 250px; margin: 8px auto 0; }
 
 .mood-item.selected { outline: 3px solid #1f5fd0; transform: translateY(-1px); }
 .rate-error { color:#d12a2a !important; font-weight:700; min-height: 18px; font-size: 14px; margin-bottom: 4px !important; }
