@@ -232,7 +232,7 @@ function showVoteStatusWindow(type) {
     <div class="vote-status-body">
       <div class="check">✓</div>
       <p>${T.voteBody}</p>
-      ${isAlready ? '' : `<a href="#home" class="btn">${T.backHome}</a>`}
+      <a href="#home" class="btn">${T.backHome}</a>
     </div>
   `;
 }
