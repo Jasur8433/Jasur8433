@@ -7,8 +7,9 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
 .container { width: min(1450px, 96%); margin: 0 auto; }
+main.container { flex: 1 0 auto; width: min(1450px, 96%); }
 .topbar { background: #fff; border-bottom: 1px solid #d8e2ef; position: sticky; top: 0; z-index: 5; }
 .topbar-inner { display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 12px; }
 .brand { text-decoration: none; color: #11284d; font-weight: 800; font-size: clamp(16px, 1.7vw, 24px); line-height: 1.2; max-width: min(72%, 760px); }
@@ -63,8 +64,8 @@ body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); 
 label { display:flex; flex-direction:column; gap:6px; font-weight:600; margin-bottom:10px; }
 input { font: inherit; border:1px solid #c7d5ea; border-radius:10px; padding:10px; }
 .btn.ghost { background:#eef3ff; color:#274b84; margin-top:0; }
-.rate-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-.rate-actions .btn { margin-top: 0; width: 100%; min-height: 44px; padding: 8px 10px; }
+.rate-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; align-items: stretch; }
+.rate-actions .btn { margin-top: 0; width: 100%; min-height: 44px; padding: 8px 10px; display: flex; align-items: center; justify-content: center; text-align: center; }
 .back-home-btn { order: 1; }
 .submit-vote-btn { order: 2; }
 .hidden { display:none; }
@@ -75,7 +76,7 @@ input { font: inherit; border:1px solid #c7d5ea; border-radius:10px; padding:10p
 .table-wrap { overflow:auto; }
 table { width:100%; border-collapse:collapse; }
 th,td { border-bottom:1px solid var(--line); padding:9px; text-align:left; vertical-align:top; }
-.footer { background: linear-gradient(135deg,#2f74e7,#1f5fd0); color:#fff; padding:18px 0; margin-top:20px; font-weight:600; }
+.footer { background: linear-gradient(135deg,#2f74e7,#1f5fd0); color:#fff; padding:18px 0; margin-top:auto; font-weight:600; }
 
 @media (max-width: 900px) {
   .admin-stats { grid-template-columns: repeat(2,1fr); }
