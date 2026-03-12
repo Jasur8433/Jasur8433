@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feedback Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#home" id="brand" class="brand"></a>
+      <div id="langButtons" class="lang-buttons"></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="homeView">
+      <section class="hero">
+        <h1 id="heroTitle"></h1>
+        <p id="heroSubtitle" class="hero-sub"></p>
+      </section>
+      <section id="cardsGrid" class="cards-grid"></section>
+    </section>
+
+    <section id="rateView" class="hidden">
+      <div class="rate-card">
+        <h2 id="rateDeptTitle"></h2>
+        <p id="rateSubtitle"></p>
+        <div id="moodButtons" class="mood-buttons"></div>
+        <div id="rateActions" class="rate-actions">
+          <a id="backToHomeBtn" class="btn ghost back-home-btn" href="#home"></a>
+          <button id="submitVoteBtn" class="btn submit-vote-btn"></button>
+        </div>
+        <p id="rateError" class="rate-error"></p>
+        <p class="anon-note" id="anonNote"></p>
+        <div id="voteStatusWindow" class="vote-status-window hidden"></div>
+      </div>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div class="admin-card" id="loginBox">
+        <h2 id="adminLoginTitle"></h2>
+        <form id="loginForm">
+          <label><span id="lblUser"></span><input name="username" required></label>
+          <label><span id="lblPass"></span><input type="password" name="password" required></label>
+          <button class="btn" id="btnLogin"></button>
+        </form>
+      </div>
+
+      <div id="dashboard" class="admin-card hidden">
+        <div class="admin-top">
+          <h2 id="dashboardTitle"></h2>
+          <button id="btnLogout" class="btn ghost"></button>
+        </div>
+        <div class="storage-tools">
+          <button id="btnConnectFile" class="btn ghost" type="button">Подключить файл</button>
+          <small id="storageStatus">Файл не подключён (временное хранилище браузера)</small>
+        </div>
+        <div id="adminStats" class="admin-stats"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th id="thDepartment"></th>
+                <th id="thMood"></th>
+                <th id="thDate"></th>
+                <th id="thAction"></th>
+              </tr>
+            </thead>
+            <tbody id="feedbackRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container" id="footerText"></div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
