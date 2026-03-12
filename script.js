@@ -80,6 +80,7 @@ const votes = JSON.parse(localStorage.getItem('feedback') || '[]');
 const el = (id) => document.getElementById(id);
 const set = (id, txt) => { el(id).textContent = txt; };
 const save = () => localStorage.setItem('feedback', JSON.stringify(votes));
+const rateActions = el('rateActions');
 const VOTE_FLAG_KEY = 'feedback_voted_departments';
 function getVotedDepartments() {
   return JSON.parse(localStorage.getItem(VOTE_FLAG_KEY) || '[]');
@@ -157,7 +158,6 @@ function showVoteStatusWindow(type) {
     <div class="vote-status-body">
       <div class="check">✓</div>
       <p>${T.voteBody}</p>
-      <a href="#home" class="btn">${T.backHome}</a>
     </div>
   `;
 }
@@ -179,12 +179,12 @@ function renderRateView(id) {
 
   if (hasVoted(id)) {
     moodButtons.innerHTML = '';
-    submitVoteBtn.classList.add('hidden');
+    rateActions.classList.add('hidden');
     showVoteStatusWindow('already');
     return;
   }
 
-  submitVoteBtn.classList.remove('hidden');
+  rateActions.classList.remove('hidden');
 
   moodButtons.innerHTML = T.moodList.map((name, index) => {
     const mood = index + 1;
@@ -206,8 +206,8 @@ function renderRateView(id) {
   submitVoteBtn.onclick = () => {
     if (hasVoted(id)) {
       moodButtons.innerHTML = '';
-      submitVoteBtn.classList.add('hidden');
-        showVoteStatusWindow('already');
+      rateActions.classList.add('hidden');
+      showVoteStatusWindow('already');
       return;
     }
     if (!selectedMood) {
@@ -218,7 +218,7 @@ function renderRateView(id) {
     markVoted(id);
     save();
     moodButtons.innerHTML = '';
-    submitVoteBtn.classList.add('hidden');
+    rateActions.classList.add('hidden');
     showVoteStatusWindow('ok');
     renderCards();
     if (isAdmin) {
