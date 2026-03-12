@@ -113,6 +113,12 @@ function statsByDept(id) {
   return { count, avg, dist };
 }
 
+function getRatingClass(avg) {
+  if (avg >= 4) return 'rating-good';
+  if (avg >= 2.5) return 'rating-medium';
+  return 'rating-bad';
+}
+
 function renderCards() {
   const T = i18n[lang];
   cardsGrid.innerHTML = departments.map((id) => {
@@ -123,7 +129,7 @@ function renderCards() {
         <a class="open-rate-btn" href="#rate/${id}">${T.openRate}</a>
         <div class="metrics">
           <div class="metric comments">💬 ${T.comments}<b>${s.count}</b></div>
-          <div class="metric rating">⭐ ${T.rating}<b>${s.avg}</b></div>
+          <div class="metric rating ${getRatingClass(Number(s.avg))}">⭐ ${T.rating}<b>${s.avg}</b></div>
         </div>
         <div class="dist"><div class="dist-title">${T.dist}</div>
           <div class="faces">
