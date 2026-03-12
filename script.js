@@ -75,13 +75,13 @@ const i18n = {
 const langs = [{ code: 'ru', label: 'RU' }, { code: 'uz', label: 'UZ' }, { code: 'kk', label: 'QQ' }];
 let lang = localStorage.getItem('lang') || 'ru';
 let isAdmin = sessionStorage.getItem('admin') === '1';
-const votes = JSON.parse(localStorage.getItem('feedback') || '[]');
+let votes = [];
 
 const el = (id) => document.getElementById(id);
 const set = (id, txt) => { el(id).textContent = txt; };
-const save = () => localStorage.setItem('feedback', JSON.stringify(votes));
 const rateActions = el('rateActions');
 const VOTE_FLAG_KEY = 'feedback_voted_departments';
+
 function getVotedDepartments() {
   return JSON.parse(localStorage.getItem(VOTE_FLAG_KEY) || '[]');
 }
@@ -94,6 +94,24 @@ function markVoted(departmentId) {
     current.push(departmentId);
     localStorage.setItem(VOTE_FLAG_KEY, JSON.stringify(current));
   }
+}
+
+async function api(path, options = {}) {
+  const res = await fetch(path, {
+    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    ...options,
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `HTTP ${res.status}`);
+  }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+async function loadVotes() {
+  const data = await api('/api/votes');
+  votes = data.votes || [];
 }
 
 let selectedMood = null;
@@ -203,7 +221,7 @@ function renderRateView(id) {
     });
   });
 
-  submitVoteBtn.onclick = () => {
+  submitVoteBtn.onclick = async () => {
     if (hasVoted(id)) {
       moodButtons.innerHTML = '';
       rateActions.classList.add('hidden');
@@ -214,16 +232,24 @@ function renderRateView(id) {
       rateError.textContent = T.selectMoodError;
       return;
     }
-    votes.push({ department: id, mood: selectedMood, date: new Date().toISOString() });
-    markVoted(id);
-    save();
-    moodButtons.innerHTML = '';
-    rateActions.classList.add('hidden');
-    showVoteStatusWindow('ok');
-    renderCards();
-    if (isAdmin) {
-      renderAdminStats();
-      renderAdminTable();
+
+    try {
+      await api('/api/votes', {
+        method: 'POST',
+        body: JSON.stringify({ department: id, mood: selectedMood }),
+      });
+      markVoted(id);
+      await loadVotes();
+      moodButtons.innerHTML = '';
+      rateActions.classList.add('hidden');
+      showVoteStatusWindow('ok');
+      renderCards();
+      if (isAdmin) {
+        renderAdminStats();
+        renderAdminTable();
+      }
+    } catch (e) {
+      rateError.textContent = 'Ошибка сохранения. Повторите попытку.';
     }
   };
 }
@@ -251,16 +277,20 @@ function renderAdminTable() {
     <td>${T.dept[v.department]}</td>
     <td>${T.moodList[Number(v.mood) - 1]}</td>
     <td>${new Date(v.date).toLocaleString()}</td>
-    <td><button class="btn ghost" onclick="removeRow(${i})">×</button></td>
+    <td><button class="btn ghost" onclick="removeRow(${v.id})">×</button></td>
   </tr>`).join('');
 }
 
-window.removeRow = (i) => {
-  votes.splice(i, 1);
-  save();
-  renderCards();
-  renderAdminStats();
-  renderAdminTable();
+window.removeRow = async (id) => {
+  try {
+    await api(`/api/votes/${id}`, { method: 'DELETE' });
+    await loadVotes();
+    renderCards();
+    renderAdminStats();
+    renderAdminTable();
+  } catch (e) {
+    alert('Не удалось удалить голос');
+  }
 };
 
 function applyTexts() {
@@ -323,6 +353,13 @@ loginForm.onsubmit = (e) => {
 btnLogout.onclick = () => { isAdmin = false; sessionStorage.removeItem('admin'); route(); };
 window.addEventListener('hashchange', route);
 
-renderLangButtons();
-applyTexts();
-route();
+(async function init() {
+  renderLangButtons();
+  try {
+    await loadVotes();
+  } catch (e) {
+    alert('База данных недоступна. Запустите server.py');
+  }
+  applyTexts();
+  route();
+})();
