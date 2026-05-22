@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Интеллектуальная веб-платформа культурного наследия Узбекистана</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header glass">
+    <nav class="nav container">
+      <a class="logo" href="#home"><i class="fa-solid fa-landmark-dome"></i> Heritage GIS/3D UZ</a>
+      <ul class="nav-links">
+        <li><a href="#map-section">Карта</a></li>
+        <li><a href="#objects">Объекты</a></li>
+        <li><a href="#visualization">3D/VR</a></li>
+        <li><a href="#qr">QR-доступ</a></li>
+      </ul>
+      <a class="btn btn-sm" href="#map-section">Открыть карту</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero reveal">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content glass">
+        <p class="badge">Интеллектуальная веб-платформа визуализации с 3D и GIS</p>
+        <h1>Система цифрового сохранения культурного наследия</h1>
+        <p>Проект объединяет интерактивную карту, цифровой архив, карточки памятников и мультимедийные инструменты для популяризации культурного наследия Узбекистана.</p>
+        <a class="btn" href="#map-section">Открыть карту</a>
+      </div>
+    </section>
+
+    <section id="map-section" class="section reveal">
+      <div class="container">
+        <h2>Интерактивная GIS-карта объектов Узбекистана</h2>
+        <p class="section-text">Поиск по названию и фильтрация по регионам: Самарканд, Бухара, Хива, Нукус/Каракалпакстан.</p>
+        <div class="toolbar glass">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="searchInput" type="text" placeholder="Поиск объекта..." aria-label="Поиск объектов" />
+          </div>
+          <select id="regionFilter" aria-label="Фильтр по регионам">
+            <option value="all">Все регионы</option>
+            <option value="Самарканд">Самарканд</option>
+            <option value="Бухара">Бухара</option>
+            <option value="Хива">Хива</option>
+            <option value="Каракалпакстан">Нукус / Каракалпакстан</option>
+          </select>
+        </div>
+        <div id="map" aria-label="Карта объектов культурного наследия"></div>
+      </div>
+    </section>
+
+    <section id="objects" class="section reveal">
+      <div class="container">
+        <h2>Цифровой каталог объектов</h2>
+        <div id="cardsContainer" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <section id="visualization" class="section reveal">
+      <div class="container">
+        <h2>3D-визуализация культурного наследия</h2>
+        <div class="glass visual-block">
+          <iframe title="3D model preview" src="https://sketchfab.com/models/6a4f4e42a3f44cbd8f727ac5c3ea98f5/embed" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+          <p>Демонстрация 3D-модели для изучения архитектурных деталей в учебном и туристическом формате.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="qr" class="section reveal">
+      <div class="container qr-grid">
+        <div>
+          <h2>QR-доступ для туристов</h2>
+          <p class="section-text">Сканируйте QR-код и откройте цифровую страницу объекта с мультимедийным контентом.</p>
+          <ul>
+            <li><i class="fa-solid fa-headphones"></i> Аудиогид и исторические справки</li>
+            <li><i class="fa-solid fa-panorama"></i> Виртуальный тур и панорамы 360°</li>
+            <li><i class="fa-solid fa-vr-cardboard"></i> Быстрый переход к VR/3D-моделям</li>
+          </ul>
+        </div>
+        <div class="glass qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https://heritage-uz-demo.local/object/registan" alt="Пример QR-кода" />
+        </div>
+      </div>
+    </section>
+
+    <section id="run" class="section reveal">
+      <div class="container">
+        <h2>Как запустить сайт локально</h2>
+        <div class="glass run-card">
+          <ol>
+            <li>Откройте проект в терминале.</li>
+            <li>Запустите: <code>python3 -m http.server 8000</code></li>
+            <li>Перейдите в браузере: <code>http://localhost:8000</code></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <h3>Проект «Интерактивная 3D-карта объектов культурного наследия»</h3>
+        <p>© 2026. Цифровое сохранение истории для будущих поколений.</p>
+      </div>
+      <div class="socials">
+        <a href="#" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+:root {
+  --text: #10203a;
+  --muted: #4b5b7a;
+  --card: rgba(255, 255, 255, 0.75);
+  --primary: #2563eb;
+  --shadow: 0 14px 30px rgba(37, 99, 235, .18);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:linear-gradient(180deg,#f8fbff,#edf3ff)}
+.container{width:min(1120px,92%);margin:0 auto}
+.section{padding:5rem 0}
+h2{font-size:clamp(1.7rem,4vw,2.4rem)}
+.section-text{color:var(--muted)}
+
+.glass{background:var(--card);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.6);border-radius:20px;box-shadow:var(--shadow)}
+.header{position:fixed;top:12px;left:50%;transform:translateX(-50%);width:min(1120px,92%);z-index:20}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem}
+.logo,.nav-links a{text-decoration:none;color:var(--text)}
+.logo{font-weight:800}
+.nav-links{list-style:none;display:flex;gap:1rem;padding:0;margin:0}
+
+.btn{display:inline-block;background:linear-gradient(120deg,#2563eb,#4f46e5);color:#fff;padding:.8rem 1.2rem;border-radius:12px;text-decoration:none;border:none;cursor:pointer;font-weight:600;transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-sm{padding:.55rem .95rem;font-size:.88rem}
+
+.hero{min-height:100vh;display:grid;place-items:center;position:relative;background:url('https://upload.wikimedia.org/wikipedia/commons/4/4f/Registan_square_Samarkand.jpg') center/cover no-repeat}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,19,44,.55),rgba(37,99,235,.35))}
+.hero-content{position:relative;z-index:1;color:#fff;padding:2rem;text-align:center;max-width:850px}
+.badge{display:inline-block;background:rgba(255,255,255,.2);padding:.35rem .75rem;border-radius:999px;margin-bottom:1rem}
+
+.toolbar{display:grid;grid-template-columns:1fr 260px;gap:.8rem;padding:.8rem;margin:1rem 0}
+.search-wrap{display:flex;align-items:center;gap:.6rem;padding:.5rem .8rem;border:1px solid #d3def9;border-radius:12px;background:#fff}
+.search-wrap input,select{border:none;outline:none;background:transparent;width:100%;font-size:1rem;color:var(--text)}
+select{padding:.8rem;border-radius:12px;background:#fff;border:1px solid #d3def9}
+#map{height:520px;border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.card{overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-7px);box-shadow:0 20px 35px rgba(15,23,42,.18)}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-body{padding:1rem}
+.meta{font-size:.9rem;color:var(--muted);display:grid;gap:.3rem;margin:.6rem 0}
+.actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+.chip{font-size:.8rem;padding:.3rem .55rem;background:#dbeafe;border-radius:999px;color:#1d4ed8}
+
+.visual-block{padding:1rem}
+.visual-block iframe{width:100%;min-height:420px;border:none;border-radius:14px}
+
+.qr-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem;align-items:center}
+.qr-grid ul{list-style:none;padding:0}
+.qr-grid li{margin:.8rem 0}
+.qr-card{display:grid;place-items:center;padding:1rem}
+.qr-card img{max-width:260px;width:100%;border-radius:16px}
+.run-card{padding:1rem 1.2rem}
+
+.footer{background:#0f172a;color:#e2e8f0;padding:2rem 0}
+.footer-content{display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.socials a{color:#e2e8f0;margin-left:.9rem;font-size:1.3rem}
+
+.reveal{opacity:0;transform:translateY(25px);transition:.65s ease}
+.reveal.active{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .toolbar{grid-template-columns:1fr}
+  .qr-grid{grid-template-columns:1fr}
+}
